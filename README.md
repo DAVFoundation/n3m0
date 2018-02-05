@@ -7,12 +7,12 @@ This project lets the autonomous boat n3m0 be controlled by a python script runn
 
 ## 🔧 The Moving Pieces
 
-The directory "map web server" has files for a web server that displays n3m0's position on a map,
+The directory `map web server` has files for a web server that displays n3m0's position on a map,
 and also allows the user to request a service at a location by clicking on that location.
 
 The locations of the request and the boat are stored in a mysql database. There are files here that allow the contents of the database to be updated, please play nice.
 
-The directory "payloadcode" is the python script that runs on the boat.  
+The directory `payloadcode` is the python script that runs on the boat.  
 
 The raspberry pi's hardware serial port is wired to the telemetry port of an ardupilot (APM) autopilot.
 In this case the APM is running the rover firmware but this might work with other vehicles.
