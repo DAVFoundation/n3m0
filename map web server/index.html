@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 4; padding: 4 }
+      #map-canvas { height: 60% }
+	  #debugarea  { height: 20% }
+	  #clickarea  { height: 10% }
+	  #button     { height: 10% }
+    </style>
+  </head>
+  <body>
+    <div id="map-canvas"> </div>
+	<div id="debugarea"> starting up... </div>
+	<div id="clickarea"> click on map... </div>
+	<div id="button">------
+	<button onclick="orderphoto()">Request Photo</button>
+	</div>
+	
+  </body>
+</html>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQRytCdcsOkKBauQxBR4dd0rltmG2Wds8">
+    </script>
+    <script type="text/javascript">
+
+// global variable definitions
+        var mapOptions;
+        var map;
+		var mlpoint;
+		var wmarker=new google.maps.Marker;
+		var lmarker=new google.maps.Marker;
+		var cmarker=new google.maps.Marker;
+		var clicklatlon = new google.maps.LatLng;
+
+      function initialize() {
+        mapOptions = {
+          center: new google.maps.LatLng(38.067857,-122.232356),
+          zoom: 18
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+		
+		map.addListener('click', function(e) {getClickLocation(e.latLng,map);})
+      }
+	  
+	  function getClickLocation(latLng,map) {
+	    clicklatlon = latLng;
+		 var stuff = "New Target bouncing at:";
+		 stuff += latLng.lat().toString();
+		 stuff += ", ";
+		 stuff += latLng.lng().toString();
+		 stuff += "<br>Click Button to request photo here."
+	     document.getElementById("clickarea").innerHTML=stuff;
+		 
+		 // show marker
+		cmarker.setMap(null);  // erase old one
+	    cmarker = new google.maps.Marker({
+	      position: latLng,
+          title:"Clicked",
+		  animation: google.maps.Animation.BOUNCE
+        });
+        // To add the marker to the map, call setMap();
+        cmarker.setMap(map);
+
+	  }
+	  
+	  function orderphoto() {
+		//document.getElementById("clickarea").innerHTML = "ordered at:"+clicklatlon.toString()
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+
+		// send web server request
+		xmlhttp.open("POST","postlatlon.php",false);// async false is to be depricated
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		//xmlhttp.send("lat=38.12&lon=-122.34&mode=REQUEST&debug=hello click");		
+		var postdata = "b_no=2" + "&lat=" + clicklatlon.lat().toString() + "&lon=" + clicklatlon.lng().toString();
+		postdata += "&mode=REQUESTED&debug=Waiting for boat";
+		xmlhttp.send(postdata);
+		var buoyall = xmlhttp.responseText;
+		//document.getElementById("clickarea").innerHTML = buoyall;
+		document.getElementById("clickarea").innerHTML = "Request sent";
+		cmarker.setMap(null);  // erase old clickpoint
+
+		//xmlhttp.send();
+	  }
+	  
+	  var ii=0;
+	  
+	  function loaddata()
+	  {
+		var xmlhttp;
+		if (window.XMLHttpRequest)
+		  {// code for IE7+, Firefox, Chrome, Opera, Safari
+		  xmlhttp=new XMLHttpRequest();
+		  }
+		else
+		  {// code for IE6, IE5
+		  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+
+		// get web server content
+		//xmlhttp.open("GET","getbuoys.php",false); // async false is to be depricated
+		xmlhttp.open("GET","getbuoys.php",false);
+		xmlhttp.send();
+		var buoyall = xmlhttp.responseText;
+		var buoyarray = buoyall.split(",");
+		
+		wmarker.setMap(null);  // erase old one
+		lmarker.setMap(null);  // erase old one
+		
+		// add a marker
+		//mlpoint = new google.maps.LatLng(38.067857,-122.232356+d.getSeconds()*0.00001)
+		var image2 = 'http://sailbot.holdentechnology.com/n3m0sm.gif';
+		var mlpoint = new google.maps.LatLng(buoyarray[2],buoyarray[3])
+	    wmarker = new google.maps.Marker({
+	      position: mlpoint,
+          title:"n3m0",
+		  icon:image2
+        });
+		
+		// center on n3m0 if not visible
+		var bnds = map.getBounds();
+		if (!(bnds.contains(mlpoint))) {
+		   map.setCenter(mlpoint);
+		}
+        // To add the marker to the map, call setMap();
+        wmarker.setMap(map);
+		
+		var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+		var mlpoint = new google.maps.LatLng(buoyarray[8],buoyarray[9])
+	    lmarker = new google.maps.Marker({
+	      position: mlpoint,
+          title:"Photo",
+		  icon:image
+        });
+        // To add the marker to the map, call setMap();
+        lmarker.setMap(map);
+		
+		// debuggging
+		var stuff = "<table border='1'><tr><th>Mark</th><th>Name</th><th>Latitude</th><th>Longitude</th><th>Status</th><th>Message</th></tr>";
+		
+		stuff += "<tr><td>" + buoyarray[0] +"</td>"
+		stuff += "<td>" + buoyarray[1] +"</td>"
+		stuff += "<td>" + buoyarray[2] +"</td>"
+		stuff += "<td>" + buoyarray[3] +"</td>"
+		stuff += "<td>" + buoyarray[4] +"</td>"
+		stuff += "<td>" + buoyarray[5] +"</td></tr>"
+		
+		stuff += "<tr><td>" + buoyarray[6] +"</td>"
+		stuff += "<td>" + buoyarray[7] +"</td>"
+		stuff += "<td>" + buoyarray[8] +"</td>"
+		stuff += "<td>" + buoyarray[9] +"</td>"
+		stuff += "<td>" + buoyarray[10] +"</td>"
+		stuff += "<td>" + buoyarray[11] +"</td></tr>"
+
+        document.getElementById("debugarea").innerHTML=stuff;
+
+	  }
+
+	  setInterval('loaddata()',2000);
+      google.maps.event.addDomListener(window, 'load', initialize);
+	  //  loaddata();
+    </script>
