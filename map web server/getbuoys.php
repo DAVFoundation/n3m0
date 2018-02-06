@@ -36,7 +36,7 @@ while($row = mysqli_fetch_array($result)) {
   echo $row['Longitude'] . ",";
   echo $row['mode'] . ",";
   echo $row['debug'] . ",";
-  echo "<br>";
+  //echo "<br>";
 }
 
 //echo "</table>";
