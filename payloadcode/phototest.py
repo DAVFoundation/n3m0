@@ -3,6 +3,7 @@ print "Here we go!"
 # Import DroneKit-Python
 from dronekit import connect, VehicleMode, LocationGlobalRelative, LocationGlobal
 from pymavlink import mavutil # Needed for command message definitions
+from picamera import PiCamera
 import time
 import math
 import requests
@@ -51,7 +52,8 @@ class PhotoStuff:
      plon=0
      pmode='none'
      pmsg = 'no message'
-          
+     camera = PiCamera()
+     
      def update_n3m0_location(self):
          ## update the boat location
          r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={'b_no':1,'lat':myPhoto.lat,'lon':myPhoto.lon,'mode':myPhoto.mode,'debug':myPhoto.message})
@@ -65,7 +67,36 @@ class PhotoStuff:
          myPhoto.plon=float(thedata[9])
          myPhoto.pmode = thedata[10]
          myPhoto.pmsg = thedata[11]
-     
+         if (str(myPhoto.pmode).find("REQUESTED") >= 0): # new request, acknowledge.
+              r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={
+                   'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':"n3m0 Received",'debug':"need mode change"})
+     def take_photo(self, w,h, filename):
+          print('taking photo')
+          print filename
+          
+          self.camera.resolution = (w, h)
+          #self.camera.resolution = (1920, 1080)
+          #self.camera.resolution = (640, 480)
+          self.camera.start_preview()
+          #time.sleep(2)
+
+          self.camera.capture(filename)
+
+          self.camera.stop_preview()
+          print('photo taken')
+
+     def post_photo(self,filename, newname):
+          print ('posting photo')
+          url = 'http://sailbot.holdentechnology.com/upload.php'
+          #url = 'http://httpbin.org/post'
+          data={'submit':'Submit','name':'fileToUpload','id':'fileToUpload'}
+          files = {'fileToUpload': (newname, open(filename, 'rb'))}
+
+          rr = requests.post(url, data=data, files=files)
+          print rr.text
+
+          print('photo posted')
+
      def get_location_meters(self,original_location, dNorth, dEast):
          """
          Returns a LocationGlobal object containing the latitude/longitude `dNorth` and `dEast` metres from the 
@@ -152,11 +183,13 @@ def location_callback(self, attr_name, value):
      if (dist <= 2.0) and (myPhoto.Photoing):
           print "Picture!", dist
           # take photo
-
-          # post photo
+          myPhoto.take_photo(1920, 1080,'/home/pi/Desktop/cap.jpg')
 
           # exit guided mode
           myPhoto.Photoing = False
+
+          # post photo
+          myPhoto.post_photo('/home/pi/Desktop/cap.jpg','photo.jpg')
 
      # continuously check to see if we need to change modes
      # if guided flag set but not guided mode: do guided mode.
@@ -209,6 +242,10 @@ while not myPhoto.time_to_quit:
      myPhoto.message = " "
      myPhoto.mode = " "
 
+     myPhoto.take_photo(640,480,'/home/pi/Desktop/testcap.jpg')
+     myPhoto.post_photo('/home/pi/Desktop/testcap.jpg','tphoto.jpg')
+     #myPhoto.time_to_quit=True
+     
      myPhoto.get_pic_requests()
 
           
