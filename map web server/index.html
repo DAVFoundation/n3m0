@@ -12,13 +12,11 @@
     </style>
   </head>
   <body>
+    <a href="http://sailbot.holdentechnology.com/showpic.html"> PICTURES </a>
     <div id="map-canvas"> </div>
 	<div id="debugarea"> starting up... </div>
 	<div id="clickarea"> click on map... </div>
-	<div id="button">------
-	<button onclick="orderphoto()">Request Photo</button>
-	</div>
-	
+	<div id="button"><button onclick="orderphoto()">Request Photo</button></div>
   </body>
 </html>
     <script type="text/javascript"
@@ -164,6 +162,10 @@
 		stuff += "<td>" + buoyarray[11] +"</td></tr>"
 
         document.getElementById("debugarea").innerHTML=stuff;
+		//location.reload(true)
+		//document.getElementById("pict").src = "uploads/upfile.jpg";
+		//document.getElementById("pict").innerHTML="<img src=\"uploads/tphoto.jpg\"  >"
+		//document.getElementById("pict").innerHTML="<img src=\"uploads/tphoto.jpg?" + new Date().getTime() + "\"  >";
 
 	  }
 

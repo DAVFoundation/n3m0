@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  </head>
+  <body>
+        <a href="http://sailbot.holdentechnology.com"> MAP </a>
+
+	<div id="pict"><img src="uploads/tphoto.jpg" alt="Smiley face" ></div>
+  </body>
+</html>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQRytCdcsOkKBauQxBR4dd0rltmG2Wds8">
+    </script>
+    <script type="text/javascript">
+
+	  
+	  
+	  
+	  function loaddata()
+	  {
+		
+		
+		location.reload(true)
+		//document.getElementById("pict").src = "uploads/upfile.jpg";
+		//document.getElementById("pict").innerHTML="<img src=\"uploads/tphoto.jpg\"  >"
+		//document.getElementById("pict").innerHTML="<img src=\"uploads/tphoto.jpg?" + new Date().getTime() + "\"  >";
+
+	  }
+
+	  setInterval('loaddata()',2000);
+	  //  loaddata();
+    </script>
