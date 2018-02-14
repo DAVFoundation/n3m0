@@ -97,6 +97,16 @@ class PhotoStuff:
 
           print('photo posted')
 
+     def deliver_photo(self,filename):
+          myPhoto.pmode = "Finished"
+          #myPhoto.pmsg = "<a href=\"uploads/"+filename+"\"><img src=\"uploads/" + filename + "\" height=50 ></a>"
+          myPhoto.pmsg = "uploads/" + filename
+          r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':myPhoto.pmode,'debug':myPhoto.pmsg})
+          print "should be guided now",myPhoto.get_distance_meters(myPhoto.point1,vehicle.location.global_relative_frame)
+          print myPhoto.pmsg
+          myPhoto.time_to_quit=True
+          
+
      def get_location_meters(self,original_location, dNorth, dEast):
          """
          Returns a LocationGlobal object containing the latitude/longitude `dNorth` and `dEast` metres from the 
@@ -180,7 +190,8 @@ def location_callback(self, attr_name, value):
 
      
      # if reached photo point: take photo, return to auto mode.
-     if (dist <= 2.0) and (myPhoto.Photoing):
+     if (dist <= 3.0) and (myPhoto.Photoing):
+     #if  (myPhoto.Photoing):
           print "Picture!", dist
           # take photo
           myPhoto.take_photo(1920, 1080,'/home/pi/Desktop/cap.jpg')
@@ -189,7 +200,9 @@ def location_callback(self, attr_name, value):
           myPhoto.Photoing = False
 
           # post photo
-          myPhoto.post_photo('/home/pi/Desktop/cap.jpg','photo.jpg')
+          fname='n3m0_' + time.strftime("%Y%m%d-%H%M%S") + '.jpg'
+          myPhoto.post_photo('/home/pi/Desktop/cap.jpg',fname)
+          myPhoto.deliver_photo(fname)
 
      # continuously check to see if we need to change modes
      # if guided flag set but not guided mode: do guided mode.
@@ -244,6 +257,8 @@ while not myPhoto.time_to_quit:
 
      myPhoto.take_photo(640,480,'/home/pi/Desktop/testcap.jpg')
      myPhoto.post_photo('/home/pi/Desktop/testcap.jpg','tphoto.jpg')
+     #fname='Tn3m0_' + time.strftime("%Y%m%d-%H%M%S") + '.jpg'
+     #myPhoto.post_photo('/home/pi/Desktop/testcap.jpg',fname)
      #myPhoto.time_to_quit=True
      
      myPhoto.get_pic_requests()
