@@ -1,6 +1,8 @@
 # n3m0
 > 🚤 Autonomous boat payload computer
 
+[![license](https://img.shields.io/github/license/DAVFoundation/n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/n3m0/blob/master/LICENSE)
+
 This project lets the autonomous boat n3m0 be controlled by a python script running on an onboard raspberry pi payload computer.
 
 ![boat pic](https://github.com/DAVFoundation/n3m0/blob/master/20170615_155019-crop.jpg)
