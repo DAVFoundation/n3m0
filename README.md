@@ -1,4 +1,6 @@
 # n3m0
+
+[![Gitter](https://img.shields.io/gitter/room/DAVFoundation/DAV-Contributors.svg?style=flat-square)](https://gitter.im/DAVFoundation/DAV-Contributors)
 [![license](https://img.shields.io/github/license/DAVFoundation/n3m0.svg?style=flat-square)](https://github.com/DAVFoundation/n3m0/blob/master/LICENSE)
 
 > 🚤 Autonomous boat payload computer
