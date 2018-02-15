@@ -23,4 +23,4 @@ This project is very much a work-in-progress, don't expect it all to work perfec
 
 ## LICENSE
 
-Licensed under MIT.
+Licensed under [MIT]https://github.com/DAVFoundation/n3m0/blob/master/LICENSE.
