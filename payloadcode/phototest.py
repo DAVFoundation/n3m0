@@ -98,13 +98,13 @@ class PhotoStuff:
           print('photo posted')
 
      def deliver_photo(self,filename):
-          myPhoto.pmode = "Finished"
+          myPhoto.pmode = "Finished<br>" + time.strftime("%Y-%m-%d %H:%M:%S")
           #myPhoto.pmsg = "<a href=\"uploads/"+filename+"\"><img src=\"uploads/" + filename + "\" height=50 ></a>"
           myPhoto.pmsg = "uploads/" + filename
-          r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':myPhoto.pmode,'debug':myPhoto.pmsg})
+          r=requests.post('http://sailbot.holdentechnology.com/insertlatlon.php',data={'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':myPhoto.pmode,'debug':myPhoto.pmsg})
           print "should be guided now",myPhoto.get_distance_meters(myPhoto.point1,vehicle.location.global_relative_frame)
           print myPhoto.pmsg
-          myPhoto.time_to_quit=True
+          #myPhoto.time_to_quit=True
           
 
      def get_location_meters(self,original_location, dNorth, dEast):
@@ -190,8 +190,8 @@ def location_callback(self, attr_name, value):
 
      
      # if reached photo point: take photo, return to auto mode.
-     if (dist <= 3.0) and (myPhoto.Photoing):
-     #if  (myPhoto.Photoing):
+     #if (dist <= 3.0) and (myPhoto.Photoing): # waits until we reach photo point, takes photo
+     if  (myPhoto.Photoing):  # use for bench testing, immediately takes photo.
           print "Picture!", dist
           # take photo
           myPhoto.take_photo(1920, 1080,'/home/pi/Desktop/cap.jpg')

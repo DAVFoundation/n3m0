@@ -147,27 +147,43 @@
 		// debuggging
 		var stuff = "<table border='1'><tr><th>Mark</th><th>Name</th><th>Latitude</th><th>Longitude</th><th>Status</th><th>Message</th></tr>";
 		
-		stuff += "<tr><td>" + buoyarray[0] +"</td>"
-		stuff += "<td>" + buoyarray[1] +"</td>"
-		stuff += "<td>" + buoyarray[2] +"</td>"
-		stuff += "<td>" + buoyarray[3] +"</td>"
-		stuff += "<td>" + buoyarray[4] +"</td>"
-		stuff += "<td>" + buoyarray[5] +"</td></tr>"
-		
-		stuff += "<tr><td>" + buoyarray[6] +"</td>"
-		stuff += "<td>" + buoyarray[7] +"</td>"
-		stuff += "<td>" + buoyarray[8] +"</td>"
-		stuff += "<td>" + buoyarray[9] +"</td>"
-		stuff += "<td>" + buoyarray[10] +"</td>"
-		
-		// special case: filenames with thumbnails- I had trouble getting the quotes into the database through php form.
-		if (buoyarray[10].includes("Finish")) {
-		// <a href="uploads/n3m0_20180214-070617.jpg"><img src="uploads/n3m0_20180214-070617.jpg" height=100 ></a>
-			stuff += "<td><a href=\"" + buoyarray[11] + "\"><img src=\"" + buoyarray[11] + "\" height=100 ></a>" +"</td></tr>"
-		} else {
-			stuff += "<td>" + buoyarray[11] +"</td></tr>"
+		for (i=0; i < 7; i+=6) {
+					
+			stuff += "<tr><td>" + buoyarray[i] +"</td>"
+			stuff += "<td>" + buoyarray[i+1] +"</td>"
+			stuff += "<td>" + buoyarray[i+2] +"</td>"
+			stuff += "<td>" + buoyarray[i+3] +"</td>"
+			stuff += "<td>" + buoyarray[i+4] +"</td>"
+			
+			//stuff += "<td>" + buoyarray[i+5] +"</td></tr>"
+			// special case: filenames with thumbnails- I had trouble getting the quotes into the database through php form.
+			if (buoyarray[i+4].includes("Finish")) {
+			// <a href="uploads/n3m0_20180214-070617.jpg"><img src="uploads/n3m0_20180214-070617.jpg" height=100 ></a>
+				stuff += "<td><a href=\"" + buoyarray[i+5] + "\"><img src=\"" + buoyarray[i+5] + "\" height=100 ></a>" +"</td></tr>"
+			} else {
+				stuff += "<td>" + buoyarray[i+5] +"</td></tr>"
+			}
 		}
-
+		
+		for (i=buoyarray.length-7; i > 6; i-=6) {
+					
+			stuff += "<tr><td>" + buoyarray[i] +"</td>"
+			stuff += "<td>" + buoyarray[i+1] +"</td>"
+			stuff += "<td>" + buoyarray[i+2] +"</td>"
+			stuff += "<td>" + buoyarray[i+3] +"</td>"
+			stuff += "<td>" + buoyarray[i+4] +"</td>"
+			
+			//stuff += "<td>" + buoyarray[i+5] +"</td></tr>"
+			// special case: filenames with thumbnails- I had trouble getting the quotes into the database through php form.
+			if (buoyarray[i+4].includes("Finish")) {
+			// <a href="uploads/n3m0_20180214-070617.jpg"><img src="uploads/n3m0_20180214-070617.jpg" height=100 ></a>
+				stuff += "<td><a href=\"" + buoyarray[i+5] + "\"><img src=\"" + buoyarray[i+5] + "\" height=100 ></a>" +"</td></tr>"
+			} else {
+				stuff += "<td>" + buoyarray[i+5] +"</td></tr>"
+			}
+		}
+		
+		stuff += "<\table>";
         document.getElementById("debugarea").innerHTML=stuff;
 		//location.reload(true)
 		//document.getElementById("pict").src = "uploads/upfile.jpg";
