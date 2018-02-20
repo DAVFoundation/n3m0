@@ -62,14 +62,14 @@ class PhotoStuff:
      def get_pic_requests(self):
          ## get data
          r2 = requests.get('http://sailbot.holdentechnology.com/getbuoys.php')          
-         thedata=r2.text.split(',')
+         thedata=r2.text.split(';')
          myPhoto.plat=float(thedata[8])
          myPhoto.plon=float(thedata[9])
          myPhoto.pmode = thedata[10]
          myPhoto.pmsg = thedata[11]
          if (str(myPhoto.pmode).find("REQUESTED") >= 0): # new request, acknowledge.
               r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={
-                   'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':"n3m0 Received",'debug':"need mode change"})
+                   'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':"n3m0 Received",'debug':"need auth"})
      def take_photo(self, w,h, filename):
           print('taking photo')
           print filename
@@ -105,6 +105,9 @@ class PhotoStuff:
           print "should be guided now",myPhoto.get_distance_meters(myPhoto.point1,vehicle.location.global_relative_frame)
           print myPhoto.pmsg
           #myPhoto.time_to_quit=True
+          myPhoto.pmode = "DONE"
+          myPhoto.pmsg = "Ready for new request" + time.strftime(" %Y-%m-%d %H:%M:%S")
+          r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':myPhoto.pmode,'debug':myPhoto.pmsg})
           
 
      def get_location_meters(self,original_location, dNorth, dEast):
@@ -190,8 +193,8 @@ def location_callback(self, attr_name, value):
 
      
      # if reached photo point: take photo, return to auto mode.
-     #if (dist <= 3.0) and (myPhoto.Photoing): # waits until we reach photo point, takes photo
-     if  (myPhoto.Photoing):  # use for bench testing, immediately takes photo.
+     if (dist <= 3.0) and (myPhoto.Photoing): # waits until we reach photo point, takes photo
+     #if  (myPhoto.Photoing):  # use for bench testing, immediately takes photo.
           print "Picture!", dist
           # take photo
           myPhoto.take_photo(1920, 1080,'/home/pi/Desktop/cap.jpg')
@@ -229,7 +232,7 @@ def mode_callback(self, attr_name, value):
      if str(value).find("STEERING") >=0:
           myPhoto.Photoing = True
           myPhoto.pmode = "UNDERWAY"
-          myPhoto.pmsg = "n3m0 received request"
+          myPhoto.pmsg = "n3m0 received request" + time.strftime(" %Y-%m-%d %H:%M:%S")
           r=requests.post('http://sailbot.holdentechnology.com/postlatlon.php',data={'b_no':2,'lat':myPhoto.plat,'lon':myPhoto.plon,'mode':myPhoto.pmode,'debug':myPhoto.pmsg})
           print "should be guided now",myPhoto.get_distance_meters(myPhoto.point1,vehicle.location.global_relative_frame)
      else:
@@ -249,8 +252,8 @@ while not myPhoto.time_to_quit:
      # getting parameters is a little buggy
      #print "Param: %s" % vehicle.parameters['WP_RADIUS']
      
-     myPhoto.message = "Working <br>" + myPhoto.message
-     myPhoto.mode = str(vehicle.mode.name) + "<br>" + myPhoto.mode
+     myPhoto.message = time.strftime("%Y-%m-%d %H:%M:%S ") + str(vehicle.battery) + " " + str(vehicle.gps_0) 
+     myPhoto.mode = str(vehicle.mode.name)
      myPhoto.update_n3m0_location()
      myPhoto.message = " "
      myPhoto.mode = " "

@@ -30,12 +30,12 @@ $result = mysqli_query($con,"SELECT * FROM buoylatlon");
 //}
 
 while($row = mysqli_fetch_array($result)) {
-  echo $row['Buoy_Number'] . ",";
-  echo $row['Buoy_Name'] . ",";
-  echo $row['Latitude'] . ", ";
-  echo $row['Longitude'] . ",";
-  echo $row['mode'] . ",";
-  echo $row['debug'] . ",";
+  echo $row['Buoy_Number'] . ";";
+  echo $row['Buoy_Name'] . ";";
+  echo $row['Latitude'] . ";";
+  echo $row['Longitude'] . ";";
+  echo $row['mode'] . ";";
+  echo $row['debug'] . ";";
   //echo "<br>";
 }
 
