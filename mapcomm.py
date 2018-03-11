@@ -34,7 +34,8 @@ class LoiterStuff:
      def get_pic_requests(self):
          ## get data
          r2 = requests.get('http://sailbot.holdentechnology.com/getbuoys.php')          
-         thedata=r2.text.split(',')
+         thedata=r2.text.split(';')
+
          myLoiter.plat=float(thedata[8])
          myLoiter.plon=float(thedata[9])
          myLoiter.pmode = thedata[10]
